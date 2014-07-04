@@ -4,7 +4,11 @@ import tkinter as tk
 class App(tk.Frame):
 	def __init__(self, master=None):
 		tk.Frame.__init__(self, master)
+		
+		self.action = tk.StringVar(value="S")
+		
 		self.createWidgets()
+		
 		self.configure(bg="black")
 		self.grid_rowconfigure(0, weight=1)
 		self.grid_columnconfigure(0, weight=1)
@@ -31,9 +35,11 @@ class App(tk.Frame):
 
 		panel = tk.Frame(bottom, bg="black")
 		panel.grid(row=0, column=2)		
-		self.radioShutdown = tk.Radiobutton(panel, text="Shutdown", fg="white", bg="black")
+		self.radioShutdown = tk.Radiobutton(panel, text="Shutdown", value="S", variable=self.action, fg="white", bg="black")
+		# self.radioShutdown = tk.Radiobutton(panel, text="Shutdown", value="S", variable=self.action)
 		self.radioShutdown.grid(row=0)	
-		self.radioHibernate = tk.Radiobutton(panel, text="Hibernate", fg="white", bg="black")
+		self.radioHibernate = tk.Radiobutton(panel, text="Hibernate", value="H", variable=self.action, fg="white", bg="black")
+		# self.radioHibernate = tk.Radiobutton(panel, text="Hibernate", value="H", variable=self.action)
 		self.radioHibernate.grid(row=1)
 		
 		panel = tk.Frame(bottom, bg="black")
@@ -52,7 +58,7 @@ def main():
 	setup.app.master.wm_title("TODO")
 	setup.app.focus()
 
-	# setup.interval(10000, setup.app.update);
+	# setup.interval(10000, setup.app.tick);
 
 	setup.mainloop()
 		
