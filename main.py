@@ -35,10 +35,12 @@ class App(tk.Frame):
 
 		panel = tk.Frame(bottom, bg="black")
 		panel.grid(row=0, column=2)		
-		self.radioShutdown = tk.Radiobutton(panel, text="Shutdown", value="S", variable=self.action, fg="white", bg="black")
+		self.radioShutdown = tk.Radiobutton(panel, text="Shutdown", value="S", variable=self.action, 
+			fg="white", bg="black", activeforeground="green", activebackground="black", selectcolor="black")
 		# self.radioShutdown = tk.Radiobutton(panel, text="Shutdown", value="S", variable=self.action)
 		self.radioShutdown.grid(row=0)	
-		self.radioHibernate = tk.Radiobutton(panel, text="Hibernate", value="H", variable=self.action, fg="white", bg="black")
+		self.radioHibernate = tk.Radiobutton(panel, text="Hibernate", value="H", variable=self.action, 
+			fg="white", bg="black", activeforeground="green", activebackground="black", selectcolor="black")
 		# self.radioHibernate = tk.Radiobutton(panel, text="Hibernate", value="H", variable=self.action)
 		self.radioHibernate.grid(row=1)
 		
@@ -46,12 +48,30 @@ class App(tk.Frame):
 		panel.grid(row=0, column=3)
 		panel.grid_rowconfigure(0, pad=2)
 		panel.grid_rowconfigure(1, pad=2)
-		self.btnStart = tk.Button(panel, text="Start", width=15, fg="white", bg="black")
+		self.btnStart = tk.Button(panel, text="Start", width=15, 
+			fg="white", bg="black", activeforeground="green", activebackground="black",
+			command=self.start)
 		self.btnStart.grid(row=0)
-		self.btnStop = tk.Button(panel, text="Stop", width=15, fg="white", bg="black")
+		self.btnStop = tk.Button(panel, text="Stop", width=15, state=tk.DISABLED,
+			fg="white", bg="black", activeforeground="green", activebackground="black",
+			command=self.stop)
 		self.btnStop.grid(row=1)
 
-
+	def start(self):
+		self.setState(tk.DISABLED)
+		self.btnStop.configure(state=tk.NORMAL)
+	
+	def stop(self):
+		self.setState(tk.NORMAL)
+		self.btnStop.configure(state=tk.DISABLED)
+		
+	def setState(self, s):
+		self.entry.configure(state=s)
+		self.radioShutdown.configure(state=s)
+		self.radioHibernate.configure(state=s)
+		self.btnStart.configure(state=s)
+		self.btnStop.configure(state=s)
+		
 def main():
 	
 	setup = tkwevents.setup(App)
