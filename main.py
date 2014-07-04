@@ -86,7 +86,7 @@ class App(tk.Frame):
 		
 		progress = time.time() - self.startTime
 		if progress > self.durationTime:
-			self.shutdown()
+			self.quit()
 		else:
 			self.showTimeLeft(self.durationTime - progress)
 			self.master.after(1000, self.tick)
@@ -102,17 +102,17 @@ class App(tk.Frame):
 		
 		self.time.configure(text=txt)
 		
-	def shutdown(self):
-		subprocess.call(
-			["shutdown", "/f", "/s"] if self.action.get() == "S" else ["shutdown", "/h"], 
-			shell=True
-		)
-		
 def main():
 	root = tk.Tk()
 	app = App(root)
 	app.master.wm_title("KI Shutdown Timer v1.0")
 	app.focus()
+	
 	app.mainloop()
+	
+	subprocess.call(
+		["shutdown", "/f", "/s", "/t", "0"] if app.action.get() == "S" else ["shutdown", "/h"], 
+		shell=True
+	)
 		
 if __name__ == "__main__":	main()
