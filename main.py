@@ -1,11 +1,13 @@
-import tkwevents
+import tktimer
 import tkinter as tk
+import time
 
 class App(tk.Frame):
 	def __init__(self, master=None):
 		tk.Frame.__init__(self, master)
 		
 		self.action = tk.StringVar(value="S")
+		self.timer = tktimer.TkTimer(self)
 		
 		self.createWidgets()
 		
@@ -15,6 +17,8 @@ class App(tk.Frame):
 		self.grid(sticky=tk.NSEW)
 		master.grid_rowconfigure(0, weight=1, minsize=200)		
 		master.grid_columnconfigure(0, weight=1, minsize=300)
+		
+		self.stop()
 	
 	def createWidgets(self):	
 	
@@ -60,10 +64,19 @@ class App(tk.Frame):
 	def start(self):
 		self.setState(tk.DISABLED)
 		self.btnStop.configure(state=tk.NORMAL)
+		
+		self.durationTime = int(self.entry.get()) * 60
+		self.startTime = time.time()
+		
+		self.showTimeLeft(self.durationTime)
+		self.timer.timeout(1000, self.tick)
 	
 	def stop(self):
 		self.setState(tk.NORMAL)
 		self.btnStop.configure(state=tk.DISABLED)
+		
+		self.startTime = 0
+		self.showTimeLeft(0)
 		
 	def setState(self, s):
 		self.entry.configure(state=s)
@@ -72,14 +85,35 @@ class App(tk.Frame):
 		self.btnStart.configure(state=s)
 		self.btnStop.configure(state=s)
 		
-def main():
+	def tick(self): 
+		if not self.startTime: return
+		
+		progress = time.time() - self.startTime
+		if progress > self.durationTime:
+			self.shutdown()
+		else:
+			self.showTimeLeft(self.durationTime - progress)
+			self.timer.timeout(1000, self.tick)
+			
+	def showTimeLeft(self, seconds):
+		seconds = int(seconds)
 	
-	setup = tkwevents.setup(App)
-	setup.app.master.wm_title("TODO")
-	setup.app.focus()
-
-	# setup.interval(10000, setup.app.tick);
-
-	setup.mainloop()
+		h = seconds // (60 * 60)
+		m = (seconds % (60 * 60)) // 60
+		s = (seconds % (60 * 60)) % 60
+		
+		txt = ":".join(["{0:02d}".format(x) for x in [h,m,s]])
+		
+		self.time.configure(text=txt)
+		
+	def shutdown(self):
+		print("shutdown!")
+		
+def main():
+	root = tk.Tk()
+	app = App(root)
+	app.master.wm_title("KI Shutdown Timer")
+	app.focus()
+	app.mainloop()
 		
 if __name__ == "__main__":	main()
