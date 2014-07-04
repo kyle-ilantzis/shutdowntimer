@@ -1,23 +1,13 @@
-import tktimer
 import tkinter as tk
 import time
+import subprocess
 
 class App(tk.Frame):
 	def __init__(self, master=None):
 		tk.Frame.__init__(self, master)
-		
 		self.action = tk.StringVar(value="S")
-		self.timer = tktimer.TkTimer(self)
-		
 		self.createWidgets()
-		
-		self.configure(bg="black")
-		self.grid_rowconfigure(0, weight=1)
-		self.grid_columnconfigure(0, weight=1)
-		self.grid(sticky=tk.NSEW)
-		master.grid_rowconfigure(0, weight=1, minsize=200)		
-		master.grid_columnconfigure(0, weight=1, minsize=300)
-		
+		self.initGrid()
 		self.stop()
 	
 	def createWidgets(self):	
@@ -41,11 +31,9 @@ class App(tk.Frame):
 		panel.grid(row=0, column=2)		
 		self.radioShutdown = tk.Radiobutton(panel, text="Shutdown", value="S", variable=self.action, 
 			fg="white", bg="black", activeforeground="green", activebackground="black", selectcolor="black")
-		# self.radioShutdown = tk.Radiobutton(panel, text="Shutdown", value="S", variable=self.action)
 		self.radioShutdown.grid(row=0)	
 		self.radioHibernate = tk.Radiobutton(panel, text="Hibernate", value="H", variable=self.action, 
 			fg="white", bg="black", activeforeground="green", activebackground="black", selectcolor="black")
-		# self.radioHibernate = tk.Radiobutton(panel, text="Hibernate", value="H", variable=self.action)
 		self.radioHibernate.grid(row=1)
 		
 		panel = tk.Frame(bottom, bg="black")
@@ -56,11 +44,19 @@ class App(tk.Frame):
 			fg="white", bg="black", activeforeground="green", activebackground="black",
 			command=self.start)
 		self.btnStart.grid(row=0)
-		self.btnStop = tk.Button(panel, text="Stop", width=15, state=tk.DISABLED,
+		self.btnStop = tk.Button(panel, text="Stop", width=15,
 			fg="white", bg="black", activeforeground="green", activebackground="black",
 			command=self.stop)
 		self.btnStop.grid(row=1)
 
+	def initGrid(self):
+		self.configure(bg="black")
+		self.grid_rowconfigure(0, weight=1)
+		self.grid_columnconfigure(0, weight=1)
+		self.grid(sticky=tk.NSEW)
+		self.master.grid_rowconfigure(0, weight=1)		
+		self.master.grid_columnconfigure(0, weight=1)
+		
 	def start(self):
 		self.setState(tk.DISABLED)
 		self.btnStop.configure(state=tk.NORMAL)
@@ -69,7 +65,7 @@ class App(tk.Frame):
 		self.startTime = time.time()
 		
 		self.showTimeLeft(self.durationTime)
-		self.timer.timeout(1000, self.tick)
+		self.master.after(1000, self.tick)
 	
 	def stop(self):
 		self.setState(tk.NORMAL)
@@ -93,7 +89,7 @@ class App(tk.Frame):
 			self.shutdown()
 		else:
 			self.showTimeLeft(self.durationTime - progress)
-			self.timer.timeout(1000, self.tick)
+			self.master.after(1000, self.tick)
 			
 	def showTimeLeft(self, seconds):
 		seconds = int(seconds)
@@ -107,12 +103,15 @@ class App(tk.Frame):
 		self.time.configure(text=txt)
 		
 	def shutdown(self):
-		print("shutdown!")
+		subprocess.call(
+			["shutdown", "/f", "/s"] if self.action.get() == "S" else ["shutdown", "/h"], 
+			shell=True
+		)
 		
 def main():
 	root = tk.Tk()
 	app = App(root)
-	app.master.wm_title("KI Shutdown Timer")
+	app.master.wm_title("KI Shutdown Timer v1.0")
 	app.focus()
 	app.mainloop()
 		
