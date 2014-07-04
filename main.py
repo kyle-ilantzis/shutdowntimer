@@ -1,10 +1,12 @@
 import tkinter as tk
 import time
 import subprocess
+	
 
 class App(tk.Frame):
 	def __init__(self, master=None):
 		tk.Frame.__init__(self, master)
+		self.result = None
 		self.action = tk.StringVar(value="S")
 		self.createWidgets()
 		self.initGrid()
@@ -86,6 +88,7 @@ class App(tk.Frame):
 		
 		progress = time.time() - self.startTime
 		if progress > self.durationTime:
+			self.result = self.action.get()
 			self.quit()
 		else:
 			self.showTimeLeft(self.durationTime - progress)
@@ -104,15 +107,16 @@ class App(tk.Frame):
 		
 def main():
 	root = tk.Tk()
-	app = App(root)
+	app = App(master=root)
 	app.master.wm_title("KI Shutdown Timer v1.0")
 	app.focus()
 	
 	app.mainloop()
 	
-	subprocess.call(
-		["shutdown", "/f", "/s", "/t", "0"] if app.action.get() == "S" else ["shutdown", "/h"], 
-		shell=True
-	)
+	if app.result:
+		subprocess.call(
+			["shutdown", "/f", "/s", "/t", "0"] if app.result == "S" else ["shutdown", "/h"], 
+			shell=True
+		)
 		
 if __name__ == "__main__":	main()
