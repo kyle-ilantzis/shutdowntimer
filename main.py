@@ -5,53 +5,46 @@ class App(tk.Frame):
 	def __init__(self, master=None):
 		tk.Frame.__init__(self, master)
 		self.createWidgets()
+		self.configure(bg="black")
 		self.grid_rowconfigure(0, weight=1)
 		self.grid_columnconfigure(0, weight=1)
-		self.grid_rowconfigure(3, weight=0)
 		self.grid(sticky=tk.NSEW)
-		master.grid_columnconfigure(0, weight=1, minsize=300)
 		master.grid_rowconfigure(0, weight=1, minsize=200)		
+		master.grid_columnconfigure(0, weight=1, minsize=300)
 	
 	def createWidgets(self):	
 	
-		self.label = tk.Label(self, text="LABEL")
-		self.label.grid(row=0, column=0, rowspan=2, columnspan=4, sticky=tk.NSEW)
+		self.time = tk.Label(self, text="0:00", font=("Arial",72), fg="white", bg="black")
+		self.time.grid(row=0, column=0, sticky=tk.NSEW)		
 		
-		self.label2 = tk.Label(self, text="LABEL2")
-		self.label2.grid(row=3, column=0)
+		bottom = tk.Frame(self, bg="black")
+		bottom.grid(row=1, column=0, padx=5, pady=5, sticky=tk.E)
+		bottom.grid_columnconfigure(0, pad=5)
+		bottom.grid_columnconfigure(1, pad=5)
+		bottom.grid_columnconfigure(2, pad=5)
+		bottom.grid_columnconfigure(3, pad=5)
 		
-		self.entry = tk.Entry(self)
-		self.entry.grid(row=3, column=1, sticky=None)
+		tk.Label(bottom, text="In x minutes", fg="white", bg="black").grid(row=0, column=0, sticky=tk.W)
 		
-		self.group = tk.Frame(self)
-		self.group.grid(row=3, column=2)
-		
-		self.radio1 = tk.Radiobutton(self.group, text="RADIO1")
-		self.radio1.grid(row=0)
-	
-		self.radio2 = tk.Radiobutton(self.group, text="RADIO2")
-		self.radio2.grid(row=1)
-		
-		self.group2 = tk.Frame(self)
-		self.group2.grid(row=3, column=3)
-		
-		self.btn1 = tk.Button(self.group2, text="BUTTON1")
-		self.btn1.grid(row=0)
-	
-		self.btn2 = tk.Button(self.group2, text="BUTTON2")
-		self.btn2.grid(row=1)
-		# self.scrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
-		# self.msgListbox = tk.Listbox(self, yscrollcommand=self.scrollbar.set)	
-		# self.onlineListbox = tk.Listbox(self)
-		# self.entry = tk.Entry(self, validate="key", validatecommand=vcmd)		
-		# self.scrollbar.config(command=self.msgListbox.yview)
-		# self.entry.bind("<KeyRelease-Return>", self.send)		
-		# self.scrollbar.grid(row=0, column=1, sticky=tk.NSEW)
-		# self.msgListbox.grid(row=0, column=0, sticky=tk.NSEW)
-		# self.onlineListbox.grid(row=0, column=2, sticky=tk.NSEW)
-		# self.entry.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky=tk.NSEW)
+		self.entry = tk.Entry(bottom)
+		self.entry.grid(row=0, column=1, sticky=tk.EW)
 
-	def update(self): pass
+		panel = tk.Frame(bottom, bg="black")
+		panel.grid(row=0, column=2)		
+		self.radioShutdown = tk.Radiobutton(panel, text="Shutdown", fg="white", bg="black")
+		self.radioShutdown.grid(row=0)	
+		self.radioHibernate = tk.Radiobutton(panel, text="Hibernate", fg="white", bg="black")
+		self.radioHibernate.grid(row=1)
+		
+		panel = tk.Frame(bottom, bg="black")
+		panel.grid(row=0, column=3)
+		panel.grid_rowconfigure(0, pad=2)
+		panel.grid_rowconfigure(1, pad=2)
+		self.btnStart = tk.Button(panel, text="Start", width=15, fg="white", bg="black")
+		self.btnStart.grid(row=0)
+		self.btnStop = tk.Button(panel, text="Stop", width=15, fg="white", bg="black")
+		self.btnStop.grid(row=1)
+
 
 def main():
 	
@@ -59,7 +52,7 @@ def main():
 	setup.app.master.wm_title("TODO")
 	setup.app.focus()
 
-	# setup.interval(10000, setup.app.updateChatters);
+	# setup.interval(10000, setup.app.update);
 
 	setup.mainloop()
 		
