@@ -8,7 +8,7 @@ import sys
 base = 'Win32GUI' if sys.platform=='win32' else None
 
 executables = [
-    Executable('main.py', base=base, targetName="shutdowntimer")
+    Executable('main.py', base=base, targetName="shutdowntimer.exe")
 ]
 
 setup(name='shutdowntimer',
