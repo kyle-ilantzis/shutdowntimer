@@ -23,7 +23,7 @@ the folder dist.
 
 ##Other##
 
-No support for systems yet.
+No support for other systems yet.
 
 #License#
 
