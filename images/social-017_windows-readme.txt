@@ -1,0 +1,1 @@
+The win.png icon is free and from https://picons.me/#social
